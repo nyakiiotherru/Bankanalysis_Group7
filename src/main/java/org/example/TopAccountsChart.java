@@ -16,9 +16,10 @@ public class TopAccountsChart extends JFrame {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
+        try (Connection conn = DatabaseConnection.getConnection(); //Connect to DB
+             Statement stmt = conn.createStatement(); // Create  SQL statement
              ResultSet rs = stmt.executeQuery(
+                     // SQL query to get top 10 accounts based on total transaction amount
                      "SELECT a.account_id, CONCAT(a.first_name, ' ', a.last_name) AS name, SUM(t.amount) AS total_amount " +
                              "FROM accounts a " +
                              "JOIN transactions t ON a.account_id = t.account_id " +
@@ -33,7 +34,7 @@ public class TopAccountsChart extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        // Create the bar chart using the data set
         JFreeChart barChart = ChartFactory.createBarChart(
                 "Top 10 Accounts by Transaction Volume",
                 "Account",
@@ -44,11 +45,11 @@ public class TopAccountsChart extends JFrame {
         ChartPanel chartPanel = new ChartPanel(barChart);
         setContentPane(chartPanel);
     }
-
+    //Shows the chart
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            TopAccountsChart frame = new TopAccountsChart();
-            frame.setVisible(true);
+            TopAccountsChart frame = new TopAccountsChart(); //Create window
+            frame.setVisible(true); // Display window
         });
     }
 }
